@@ -17,7 +17,7 @@
 +  // Custom themes retain their frame colors because they skip these overrides.
 +  mixer[ui::kColorFrameInactive] = {ui::kColorFrameActive};
 +  if (!dark_mode) {
-+    mixer[ui::kColorFrameActive] = {ui::kColorSysBase};
++    mixer[ui::kColorFrameActive] = {ui::kColorSysHeader};
 +  }
 +
    // Toolbar colors.
@@ -109,15 +109,17 @@
  void AddMaterialTabStripColorMixer(ui::ColorProvider* provider,
                                     const ui::ColorProviderKey& key) {
    if (!ShouldApplyChromeMaterialOverrides(key)) {
-@@ -26,15 +33,17 @@ void AddMaterialTabStripColorMixer(ui::C
+@@ -26,15 +33,19 @@ void AddMaterialTabStripColorMixer(ui::C
    ui::ColorMixer& mixer = provider->AddMixer();
    mixer[kColorDetachedTabBackgroundActiveFrameActive] = {
        dark_mode ? ui::kColorSysSurfaceVariant : ui::kColorSysBase};
 -  mixer[kColorTabBackgroundActiveFrameActive] = {ui::kColorSysBase};
-+  mixer[kColorTabBackgroundActiveFrameActive] = {kColorLocationBarBackground};
++  const ui::ColorId active_tab_background =
++      dark_mode ? kColorLocationBarBackground : kColorToolbar;
++  mixer[kColorTabBackgroundActiveFrameActive] = {active_tab_background};
    mixer[kColorTabBackgroundActiveFrameInactive] = {
 -      kColorTabBackgroundActiveFrameActive};
-+      kColorLocationBarBackground};
++      active_tab_background};
  
 -  mixer[kColorTabBackgroundInactiveFrameActive] = {ui::kColorSysHeader};
 -  mixer[kColorTabBackgroundInactiveFrameInactive] = {
@@ -133,7 +135,7 @@
    mixer[kColorTabStripComboButtonSeparator] = {ui::kColorSysDivider};
    mixer[kColorTabStripControlButtonInkDrop] = {ui::kColorSysStateHeaderHover};
    mixer[kColorTabStripControlButtonInkDropFrameInactive] = {
-@@ -44,23 +53,19 @@ void AddMaterialTabStripColorMixer(ui::C
+@@ -44,23 +55,19 @@ void AddMaterialTabStripColorMixer(ui::C
    mixer[kColorTabStripControlButtonInkDropRippleFrameInactive] = {
        ui::kColorSysStateRippleNeutralOnSubtle};
  
@@ -145,25 +147,25 @@
  
 -  mixer[kColorTabBackgroundSelectedFrameActive] = {ui::GetResultingPaintColor(
 -      ui::kColorSysStateHeaderSelect, kColorTabBackgroundInactiveFrameActive)};
-+  mixer[kColorTabBackgroundSelectedFrameActive] = {kColorLocationBarBackground};
++  mixer[kColorTabBackgroundSelectedFrameActive] = {active_tab_background};
    mixer[kColorTabBackgroundSelectedFrameInactive] = {
 -      ui::GetResultingPaintColor(ui::kColorSysStateHeaderSelect,
 -                                 kColorTabBackgroundInactiveFrameInactive)};
-+      kColorLocationBarBackground};
++      active_tab_background};
    mixer[kColorTabStripScrollButtonBackground] = {
        kColorTabBackgroundInactiveFrameActive};
    mixer[kColorTabBackgroundSelectedHoverFrameActive] = {
 -      ui::GetResultingPaintColor(ui::kColorSysStateHoverDimBlendProtection,
 -                                 kColorTabBackgroundSelectedFrameActive)};
-+      kColorLocationBarBackground};
++      active_tab_background};
    mixer[kColorTabBackgroundSelectedHoverFrameInactive] = {
 -      ui::GetResultingPaintColor(ui::kColorSysStateHoverDimBlendProtection,
 -                                 kColorTabBackgroundSelectedFrameInactive)};
-+      kColorLocationBarBackground};
++      active_tab_background};
  #if !BUILDFLAG(IS_ANDROID)
    mixer[kColorTabDiscardRingFrameActive] = {ui::kColorSysStateInactiveRing};
    mixer[kColorTabDiscardRingFrameInactive] = {kColorTabDiscardRingFrameActive};
-@@ -68,26 +73,26 @@ void AddMaterialTabStripColorMixer(ui::C
+@@ -68,26 +75,26 @@ void AddMaterialTabStripColorMixer(ui::C
    mixer[kColorTabForegroundActiveFrameActive] = {ui::kColorSysOnSurface};
    mixer[kColorTabForegroundActiveFrameInactive] = {
        kColorTabForegroundActiveFrameActive};
